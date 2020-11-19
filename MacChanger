@@ -1,0 +1,252 @@
+#!/bin/bash
+trap ctrl_c int
+ctrl_c() {
+clear; echo -e "\n\033[31;1mExit\n"; exit
+}
+##########################################
+red="\033[31;1m";   green="\033[32;1m";  #
+black="\033[30;1m";  yellow="\033[33;1m";#
+pink="\033[35;1m";   cyan="\033[36;1m";  #
+white="\033[37;1m"; rest="\033[00;1m";   #
+N="\n";T="\t";S=sleep;Nul=/dev/null 2>&1;#
+##########################################
+
+function art() {
+
+clear;echo -e $N$T$T$black"""
+     ..                                ..
+    ....                              ....
+    .......$white"I"  7,$black....... .......$white:7  +$black.......           
+    .......$white?.7$black......... .........$white"7",=$black.......           
+    .....$white+ .7$black....$cyan"Your"$black.. ..$cyan"MAC@"$black....$white"7". ~$black.....
+    .....$white"7"$black.. ..........$red|$black..........$white"7"..7$black.....
+    .....$white?..7$black..........$red"V"$black.......... $white..7$black.....
+    ....$white?:..$black ..$yellow$mac$mac2$mac3$mac4$black.. $white..=~$black....         
+    ....$white"7":..$black ..................... $white..+?$black.... 
+    ....$white~I..I $black...................$white =..7$black.....         
+    .....$white"7"...7 $black.................$white"77"...7$black.....         
+    .....$white:7...7 $black...............$white"77"... ,$black.....           
+    .......$white"7" ..,7 $black........... $white""7... 7$black.......         
+    .........$white,7..,7 7$black..... $white 7...7$black..........           
+    ............$white""7...7 $black...$white 7...7$black............           
+    ..............$white ..7$black...$white"7..7"$black..............           
+    ...$white.....$black.......$white"7".7.$black.$white~I~7$black.......$white.....$black...           
+    ...$white~    7.$black..... $white~:=.I.I $black.....$white.7    ,$black...           
+    ...$white=       7... I.7. .7 ...$white"7"       ,$black...           
+    .7..$white"7"          ,$black.......$white,7         7$black.. .           
+    ,7 ..$white"7"         .$black........$white"7"        7$black..  ~           
+     . ....$white...? 7..$black..........$white.7 ?....$black...7.            
+     .$white+7$black........$white,7$black..........$white. .$black........$white"7":$black.            
+     ..$white..$black........$white:7$black........$white.7.$black........$white"7 "$black..            
+      ..$white"77"$black........$white: 77?=?7...$black........$white"77"$black..             
+      ...$white"77".$black.......$white:......,.$black........$white"77"$black...             
+       ...$white+ .$black....... .....7.......$white. :$black...              
+       ....$white. .$black...... ..... ......$white"77".$black...,
+        ....$white. 7$black.................$white. .$black....
+         ...$white. 7$black................$white. .$black....
+          :..$white. .$black...............$white. 7$black..=                 
+           ..$white"7" .$black...............$white. 7$black.7                  
+             $white,7$black.................$white"7"=$black                    
+               ..................                     
+                 ..............                       
+                  ..........
+"""
+
+}
+
+function help() {
+clear;echo -e $green"""
+Mac_Changer 1.0.1a (amd64/i386)$red
+Usage:$yellow mac_changer $cyan[options] command
+$rest
+mac_changer valid commands:
+$rest
+$red  -i $white -$yellow select interface on Your Device
+$red  -m $white -$green Set Mac_Address xx:xx:xx:xx:xx:xx
+$red  -rN$white -$cyan Rstart NetworkManager
+$red  -h $white -$rest Help Menu
+"""
+
+}
+
+function eth0() {
+
+        echo -e $N$T$T$cyan"[+]$green Enter New_Mac Address "$N$N
+        echo -e -n $red"┌──[Crypto$green@"$yellow"Panther$red]─["$cyan"New_Mac$red]\n└──╼ $green\$ "
+        read mac
+        if [[ ${#mac} -eq 17 ]]; then
+                ifconfig eth0 down;$S 2
+                ifconfig eth0 hw ether $mac >/dev/null 2>&1;
+                if [[ $? -eq 0 ]]; then
+                        ifconfig eth0 up;art;systemctl restart NetworkManager;
+                else
+                        echo -e $N$red"[-] Error Invalid Mac_Address !!"$N
+                        ifconfig eth0 up
+                fi
+        else
+                echo -e $N$T$red"[-] Plz Enter Valid Mac_Address 0x:xx:xx:xx:xx:xx !!" $N;eth0;
+        fi
+
+}
+
+function wlan0() {
+
+        echo -e $N$T$T$cyan"[+]$green Enter New_Mac Address "$N
+        echo -e -n $red"┌──[Crypto$green@"$yellow"Panther$red]─["$cyan"New_Mac$red]\n└──╼ $green\$ "
+        read mac2
+        if [[ ${#mac2} -eq 17 ]]; then
+                ifconfig wlan0 down;$S 2
+                ifconfig wlan0 hw ether $mac2 >/dev/null 2>&1;
+                if [[ $? -eq 0 ]]; then
+                        ifconfig wlan0 up ;art;systemctl restart NetworkManager
+                else
+                        echo -e $N$red"[-] Error Invalid Mac_Address !!"$N
+                        ifconfig wlan0 up
+                fi
+        else
+                echo -e $N$T$red"[-] Plz Enter Valid Mac_Address 0x:xx:xx:xx:xx:xx"$N;wlan0;
+        fi
+
+
+}
+
+function custom() {
+	echo -e $N$T$T$green"Enter Your Device Interface"$N
+        echo -e -n $red"┌──[Crypto$green@"$yellow"Panther$red]─["$cyan"interface$red]\n└──╼ $green\$ "
+        read input
+        ifconfig $input >/dev/null 2>&1;
+        if [[ $? -eq 0  && ${#input} -gt 0 ]]; then
+		while true
+		do
+                echo -e $N$T$T$cyan"[+]"$green" Enter New_Mac Address "$N
+                echo -e -n $red"┌──[Crypto$green@"$yellow"Panther$red]─["$cyan"New_Mac$red]\n└──╼ $green\$ "
+                read mac3
+                if [[ ${#mac3} -eq 17 ]]; then
+                        ifconfig $input down;$S 2
+                        ifconfig $input hw ether $mac3 >/dev/null 2>&1;
+                        if [[ $? -eq 0 ]]; then
+                                ifconfig $input up
+                            	art;systemctl restart NetworkManager;$S 1;exit
+                        else
+                                echo -e $N$red"[-] Error Invalid Mac_Address !! "$N
+                                ifconfig $input up
+                        fi
+                else
+                        echo -e $N$T$red"[-] Plz Enter Valid Mac_Address 0x:xx:xx:xx:xx:xx"$N;$S 2;
+                fi
+
+		done
+
+        else
+                echo -e $N$T$red"[-] "$input" error fetching interface information: Device not found"$N;$S 2;clear;custom;
+        fi
+
+
+}
+#########################
+function Change() {
+while true
+do
+clear;echo -e  $red"""
+╔╦╗┌─┐┌─┐$green    ╔═╗┬ ┬┌─┐┌┐┌┌─┐┌─┐┬─┐
+║║║├─┤│  $yellow    ║  ├─┤├─┤││││ ┬├┤ ├┬┘
+╩ ╩┴ ┴└─┘$yellow────$red╚═╝┴ ┴┴ ┴┘└┘└─┘└─┘┴└─
+$green
+1)Eth0
+2)wlan0
+3)Custom
+"""
+echo -e -n $red"┌──[Crypto$green@"$yellow"Panther$red]─["$cyan"interface$red]\n└──╼ $green\$ "
+read interface
+if [[ $interface == 'eth0' || $interface -eq 1 ]]; then
+	eth0;exit
+elif [[ $interface == 'wlan0' || $interface -eq 2 ]]; then
+	wlan0;exit
+elif [[ $interface == 'custom' || $interface -eq 3  ]]; then
+	custom;exit
+else
+	echo -e $N$T$T$red"[-] Invalid ?? "$N;$S 2
+fi
+
+done
+
+}
+if [[ $EUID -eq 0 ]];then
+	if [[ $1 == '-i' ]]; then
+		if [[ $2 == 'wlan0' ]];then
+			if [[ $3 == '-m' ]]; then
+				ifconfig wlan0 down;$S 2
+				mac4=$4
+				if [[ ${#mac4} -eq 17 ]]; then
+					ifconfig wlan0 hw ether $mac4 >/dev/null 2>&1;
+					if [[ $? -eq 0 ]]; then
+						ifconfig wlan0 up;$S 1;art;systemctl restart NetworkManager
+					else
+						echo -e $N$T$red"[-] Error Invalid Mac_Address !! "$N
+						ifconfig wlan0 up
+					fi
+				else
+					echo -e $N$T$red"[-] Enter Valid Mac_Address xx:xx:xx:xx:xx:xx "$N
+				fi
+			else
+				echo -e $N$T$red'[-] Plz include [-m] parameter '$N$N$T'[-] Enter Valid Mac_Address 0x:xx:xx:xx:xx:xx '$N
+			fi
+
+		elif [[ $2 == 'eth0' ]]; then
+			if [[ $3 == '-m' ]]; then
+                                ifconfig eth0 down;$S 2
+                                mac4=$4
+                                if [[ ${#mac4} -eq 17 ]]; then
+                                        ifconfig eth0 hw ether $mac4 >/dev/null 2>&1;
+                                        if [[ $? -eq 0 ]]; then
+                                                ifconfig eth0 up;$S 1;art;systemctl restart NetworkManager
+                                        else
+                                                echo -e $N$T$red"[-] Error Invalid Mac_Address !! "$N
+                                                ifconfig eth0 up
+                                        fi
+                                else
+                                        echo -e $N$T$red"[-] Enter Valid Mac_Address xx:xx:xx:xx:xx:xx "$N
+                                fi
+                        else
+                                echo -e $N$T$red'[-] Plz include [-m] parameter '$N$N$T'[-] Enter Valid Mac_Address 0x:xx:xx:xx:xx:xx '$N
+                        fi
+
+		else
+			ifconfig $2 >/dev/null 2>&1;
+			if [[ $? -eq 0 && $2 > $? ]]; then
+				if [[ $3 == '-m' ]]; then
+                        		ifconfig $2 down;$S 1
+					mac4=$4
+                        		if [[ ${#mac4} -eq 17 ]]; then
+                        			ifconfig $2 hw ether $4 >/dev/null 2>&1;
+						if [[ $? -eq 0 ]]; then
+                        	        		ifconfig $2 up;$S 1;art;systemctl restart NetworkManager
+						else
+							echo -e $N$T$red"[-] Error Invalid Mac_Address !! "$N
+                                                	ifconfig $2 up
+						fi
+                        		else
+                        	        	echo -e $N$T$red"[-] Enter Valid Mac_Address xx:xx:xx:xx:xx:xx "$N
+                        		fi
+                		else
+                	        	echo -e $N$T$red'[-] Plz include [-m] parameter '$N$N$T'[-] Enter Valid Mac_Address 0x:xx:xx:xx:xx:xx '$N
+                		fi
+
+			else
+				echo -e $N$T$red"[-]" $2" error fetching interface information: Device not found"$N
+			fi
+		fi
+	elif [[ $1 == '-rN' ]]; then
+		systemctl restart NetworkManager
+	elif [[ $1 == '-h' || $1 == '--help' ]]; then
+		help
+	else
+		if [[ $1 < $? ]]; then
+			Change
+		fi
+		echo -e $N$T$red"[-] Invalid Command !! "$N
+	fi
+else
+	echo -e $N$T$T$red"[0_0] Root User Requierd !!"$N;exit
+fi
+
