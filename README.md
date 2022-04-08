@@ -8,6 +8,13 @@
 
 </span>
 
+#### 💽 Setup Process .......
+
+```fish
+git clone https://github.com/JackPer0/macChanger.git
+cd macChanger
+sudo mv MacChanger /usr/bin/macChanger
+```
 #### 💻 Change mac address follow the command 🔽
 ```fish
 macChanger -i wlan0 -m 00:02:3D:89:8f:00
